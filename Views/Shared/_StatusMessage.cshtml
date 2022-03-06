@@ -1,0 +1,18 @@
+@{
+
+
+
+    var mgs = TempData["StatusMessage"] as string;
+}
+
+@if (!String.IsNullOrEmpty(mgs))
+
+
+
+{
+    var statusMessageClass = mgs.StartsWith("Error") ? "danger" : "success";
+    <div class="alert alert-dismissible alert-@statusMessageClass">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>@mgs</strong>
+    </div>
+}

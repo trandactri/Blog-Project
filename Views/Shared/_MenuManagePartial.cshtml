@@ -1,0 +1,50 @@
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService authorizationService
+
+@{
+    var result = await authorizationService.AuthorizeAsync(this.User, "ViewManageMenu");
+    var result2 = await authorizationService.AuthorizeAsync(this.User, "AddPost");
+}
+
+@if (result.Succeeded)
+{
+
+    <div class="dropdown">
+        <a class="btn btn-outline-danger dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+        aria-haspopup="true" aria-expanded="false">Manage</a>
+        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="managedropdownmenu">
+            <a class="dropdown-item" asp-action="Index" asp-controller="DbManage" asp-area="Database">
+                Database
+            </a>
+            <a class="dropdown-item" asp-action="Index" asp-controller="Role" asp-area="Identity">
+                Manage Role
+            </a>
+            <a class="dropdown-item" asp-action="Index" asp-controller="User" asp-area="Identity">
+                Manage Member
+            </a>
+            <a class="dropdown-item" asp-action="Index" asp-controller="Category" asp-area="Blog">
+                Manage Blog Category
+            </a>
+            <a class="dropdown-item" asp-action="Index" asp-controller="Post" asp-area="Blog">
+                Manage Blog
+            </a>
+            <a target="_blank" class="dropdown-item" asp-action="Index" asp-controller="FileManager" asp-area="Files">
+                Manage Files
+            </a>
+        </div>
+    </div>
+}
+
+@if (result2.Succeeded)
+{
+
+    <div class="dropdown">
+        <a class="btn btn-outline-danger dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+        aria-haspopup="true" aria-expanded="false">Manage</a>
+        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="managedropdownmenu">
+            <a class="dropdown-item" asp-action="Index" asp-controller="Post" asp-area="Blog">
+                Manage Blog
+            </a>
+        </div>
+    </div>
+}

@@ -1,0 +1,93 @@
+@model List<Post>
+
+@using App.Components
+@using App.Models.Blog
+@{
+    List<Category>? categories = ViewBag.Categories as List<Category>;
+    Category? category = ViewBag.category as Category;
+    ViewData["Title"] = (category != null) ? category.Title : "Latest Posts";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="~/">Home</a></li>
+        @if (category != null)
+        {
+            var li = category.ListParents();
+            foreach (var l in li)
+            {
+                <li>
+                    /
+                    <a class="breadcrumb-item" asp-action="Index" asp-route-categorySlug="@l.Slug">&nbsp;&nbsp;@l.Title</a>
+                </li>
+            }
+        }
+    </ol>
+</nav>
+
+<h1>@ViewData["Title"]</h1>
+@if (category != null)
+{
+    <p>@Html.Raw(category.Description)</p>
+}
+else
+{
+    <p>Posts in all categories ...</p>
+}
+<hr>
+
+@if (Model.Count() == 0)
+{
+    <center>
+        <h1>Sorry, this category is quite new.</h1> 
+        <h1>We'll update right away</h1>
+    </center>
+    
+}
+
+@foreach (var post in Model)
+{
+    <div class="card mt-5 mb-5 w-80">
+        <div class="row g-0">
+            <div class="col-md-4">
+                @if (post.ImageFile.Substring(0,4) == "Post")
+                {
+                    <img src="/contents/post/@post.ImageFile" class="img-fluid rounded-start">
+                }
+                else
+                {
+                    <img src="@post.ImageFile" class="img-fluid rounded-start">
+                }
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a asp-controller="Home" asp-action="Detail" asp-route-postSlug="@post.Slug">@post.Title</a>
+                    </h5>
+                    <p class="card-text">@post.Description</p>
+                    <div>
+                        Category:
+                        <strong class="text-danger">
+                            @post.PostCategories.FirstOrDefault()?.Category.Title
+                        </strong>
+                    </div>
+                    <div class="author-row">
+                        By <strong>@post.Author.UserName</strong> on @post.DateUpdated.ToLongDateString()
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Sidebar {
+@await Component.InvokeAsync("App.Components.CategorySidebar",
+new CategorySidebar.CategorySidebarData()
+{
+Categories = categories,
+level = 0,
+categorySlug = ViewBag.CategorySlug
+})
+}
+
+<partial name="_PagingLayout" model="@ViewBag.pagingModel" />

@@ -1,0 +1,16 @@
+@model App.Models.Blog.Post
+
+@{
+    ViewData["Title"] = "Delete Post";
+}
+
+<h1>@ViewData["Title"]</h1>
+<p>Really want to delete?</p>
+<h4>@Model.Title</h4>
+<div>
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="PostId" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> 
+        <a class="btn btn-info" asp-action="Index">Post List</a>
+    </form>
+</div>

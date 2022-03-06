@@ -1,0 +1,107 @@
+@model App.Areas.Blog.Models.CreatePostModel
+
+@{
+    ViewData["Title"] = "Update Post";
+    var list = ViewData["categories"] as MultiSelectList;
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="hidden" asp-for="PostId" />
+            <div class="form-group">
+                <label asp-for="CategoryIDs" class="control-label"></label>
+                <select asp-for="CategoryIDs" multiple="multiple" asp-items="list" class="w-100"></select>
+                <span asp-validation-for="CategoryIDs" class="text-danger"></span>
+            </div>
+
+
+            @if (Model.ImageFile.Substring(0, 4) == "Post")
+            {
+                <div class="form-group w-25">
+                    <label asp-for="ImageFile" class="control-label"></label>
+                    <input type="file" name="ImageFile" onchange="preview()" id="ImageFile"/>
+                    <img id="frame" src="/contents/post/@Model.ImageFile" width="100" height="300"
+                    class="rounded-3 mt-2 border border-dark border-3" />
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="form-group w-25">
+                    <label asp-for="ImageFile" class="control-label"></label>
+                    <input type="file" name="ImageFile" onchange="preview()" id="ImageFile" />
+                    <img id="frame" src="@Model.ImageFile" width="100" height="300"
+                    class="rounded-3 mt-2 border border-dark border-3" />
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                </div>
+            }
+
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Slug" class="control-label"></label>
+                <input asp-for="Slug" class="form-control" />
+                <span asp-validation-for="Slug" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <textarea asp-for="Content" class="form-control"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Published" /> @Html.DisplayNameFor(model =>
+                    model.Published)
+                </label>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Update" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-info">Post List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+
+<script src="~/lib/multiple-select/multiple-select.min.js"></script>
+<link rel="stylesheet" href="~/lib/multiple-select/multiple-select.min.css" />
+
+<script>
+    $("#CategoryIDs").multipleSelect({
+        selectAll: false,
+        keepOpen: false,
+        isOpen: false,
+    });
+
+    function preview() {
+        frame.src = URL.createObjectURL(event.target.files[0]);
+    }
+
+</script>
+
+<partial name="_ValidationScriptsPartial" />
+}
+
+
+@{
+    var summernote = new App.Models.Summernote("#Content")
+    {
+        height = 500
+    };
+}
+<partial name="_Summernote" model="summernote" />
